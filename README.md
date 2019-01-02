@@ -1,1 +1,1 @@
-# CS1699-Bitcoin-and-Blockchain-Technology
+# CS1699-Blockchain-Technology-and-Cryptocurrency
