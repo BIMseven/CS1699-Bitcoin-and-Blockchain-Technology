@@ -1,0 +1,54 @@
+/*
+    StringCoin 
+    NOTES: 
+        ! Lines
+            single black on the blockchain
+            each block consists of a either a single CREATE or a single TRANSFER
+            
+        * Pub and priv keys are DSA with default SUN providor
+            see pubkeydemo
+        * MINING
+            Hashes of the previous line use SHA-256 and thus are 256 bits.
+            All newly created coins start in the Bill account (public and secret keys below).
+        *BLOCK ANATOMY:
+            TWO BLOCKS:
+                CREATE
+                    PREV,CREATE,COIN,COINSIG,SIG
+                TRANSFER
+                    PREV,TRANSFER,COIN,PK,SIG   
+                
+            param0: PREV 
+                -is the SHA256 of the entire prev line, excluding carriage returns. In case of "0"(Gen block).
+                    The input include(s) commas.
+                - line 2 of test is "76ec8........953d" which is the hash of line 1
+                    "0,CREATE,0000,302c.....7c72"
+            *field 2:
+                either CREATE or TRANSFER.
+                    -CREATE generates a coing for Bill
+                    =TRANSFER transfers a coin -if a person owns it - to the address (public key) in field 4
+             *field 3:
+                refers to the a coin ID, either a non-existant one (if CREATE), or that the person who owns (TRANSFER).
+        *CoinID's CANNOT BE REGENERATED, once it exists, it cannot be re-created --> no two coins with the same ID. 
+            *field 4: if(field2 == CREATE), 4th field is the name of the coin signed with Bill's secret key to verify his authorization/creation of coin
+                        (field2 == TRANSFER), 4th field = public key of the recipient of the coin  
+            *field 5: SIG will always be a signature of the block up to this point as a string, signed with the secret key of the block creator
+                            Bill for all create blocks, whoever owns/is moving the coin for all TRANSFER blocks.
+                        -> SHOULD NOT cinclude the "final" comma since we have not yet added the final field. .....
+                            example: in test_blockchain.txt signature is "302....c72" and applies to previous string
+                                            "0,CREATE,0000,302c0....17a673f93"
+        *If there is a failure, it is enough to simply stat ethe blockchain connot read or there is an error
+            . However, you should NOT try to display who owns what coins if there is an error! 
+            An error indicates an invalid blockchain and you should just inform the user and exit the program.
+        Coin *coin ID* / Owner = *public key*
+    This should be sorted by coin ID alphabetically.
+    
+        {Tips}
+    Be sure to read in data as plain ASCII, not UTF-8 (i.e., use string.getBytes())
+    *I recommend you use the newly-added /hash/Sha256Hash.java, /public_key_crypto/Sign.java, and /public_key_crypto/Verify.java files to test your code, hashes, signing, verifying, reading,
+        etc. Note that you may have to adjust output size!
+    *I wrote up much of the sample code to help you - use it!
+    *I recommend that Work on getting the happy path (i.e. test_blockchain.txt which has no errors) to work, and just throw an exception if you hit a problem. 
+        Then go back and ensure that you handle errors appropriately.
+    *Note that keys will often look similar (starting with 3081f...) because each key consists of everything you need to re-generate it including internal settings of the cryptographic functions. 
+        When comparing keys, I recommend you look at the last few (say, 4) hexits (hexadecimal digits).
+*/
